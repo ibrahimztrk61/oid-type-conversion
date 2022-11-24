@@ -6,6 +6,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate.dialect: com.example.oidtypeconversion.ByteaSQLDialect
 axon:
   axon server:
     enabled: false

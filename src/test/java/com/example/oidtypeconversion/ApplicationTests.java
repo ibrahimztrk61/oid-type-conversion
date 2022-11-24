@@ -21,19 +21,18 @@ class ApplicationTests {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void it_should_store_payload_as_oid() {
-        // when
-        SimpleCommand command = new SimpleCommand("test");
-        commandGateway.sendAndWait(command);
+    void it_should_store_payload_as_bytea() {
+        // When
+        SimpleCommand simpleCommand = new SimpleCommand("test");
+        commandGateway.sendAndWait(simpleCommand);
 
-        // then
+        // Then
         String sql = "SELECT payload FROM domain_event_entry";
         jdbcTemplate.query(sql, rs -> {
             String columnType = rs.getMetaData().getColumnTypeName(1);
-            assertThat(columnType).isEqualToIgnoringCase("oid");
+            assertThat(columnType).isEqualToIgnoringCase("bytea");
 
-            long oid = rs.getLong(1);
-            byte[] payload = jdbcTemplate.queryForObject("SELECT lo_get(?)", byte[].class, oid);
+            byte[] payload = rs.getBytes(1);
             byte[] expected = "<com.example.oidtypeconversion.aggregate.SimpleEvent><id>test</id></com.example.oidtypeconversion.aggregate.SimpleEvent>"
                     .getBytes(StandardCharsets.UTF_8);
             assertThat(payload).isEqualTo(expected);
