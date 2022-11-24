@@ -6,6 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+    mapping-resources: "Xml.hbm.xml"
 axon:
   axon server:
     enabled: false
